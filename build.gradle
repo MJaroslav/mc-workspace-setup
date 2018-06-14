@@ -1,0 +1,44 @@
+apply plugin: 'java'
+
+
+repositories {
+    jcenter()
+}
+
+apply plugin: "application"
+mainClassName = "mjaroslav.progs.mcws.MCWS"
+
+archivesBaseName = "MCWS"
+version = "1.0.0"
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task fatJar(type: Jar) {
+    baseName = project.archivesBaseName + "-all"
+    from {
+    	configurations.compile.collect {
+    		it.isDirectory() ? it : zipTree(it)
+    	}
+    }
+    manifest {
+    	attributes "Main-Class": mainClassName
+  	}	
+    with jar
+}
+
+jar {
+	manifest {
+    	attributes "Main-Class": mainClassName
+  	}	
+}
+
+dependencies {
+    compile "com.google.code.gson:gson:2.8.2"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:2.7"
+	compile "org.apache.logging.log4j:log4j-api:2.7" 
+    compile "org.apache.logging.log4j:log4j-core:2.7" 
+}
